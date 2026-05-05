@@ -1,6 +1,8 @@
-const API = "http://localhost:5000/api/auth";
-const PROJECT_API = "http://localhost:5000/api/project";
-const RUN_API = "http://localhost:5000/api/run";
+const BASE_URL = "https://codeorbit-backend-1.onrender.com";
+
+const API = `${BASE_URL}/api/auth`;
+const PROJECT_API = `${BASE_URL}/api/project`;
+const RUN_API = `${BASE_URL}/api/run`;
 
 // ================= GLOBAL =================
 let files = {};
@@ -95,14 +97,12 @@ function renderFiles() {
 
     if (f === current) div.classList.add("active");
 
-    // OPEN FILE
     div.onclick = () => {
       files[current] = editor.value;
       openFile(f);
       renderFiles();
     };
 
-    // RENAME
     const edit = document.createElement("span");
     edit.innerText = " ✏️";
     edit.onclick = (e) => {
@@ -120,7 +120,6 @@ function renderFiles() {
       renderFiles();
     };
 
-    // DELETE
     const del = document.createElement("span");
     del.innerText = " ❌";
     del.style.color = "red";
@@ -131,10 +130,7 @@ function renderFiles() {
       delete files[f];
 
       const keys = Object.keys(files);
-
-      if (keys.length === 0) {
-        files["main.py"] = "";
-      }
+      if (keys.length === 0) files["main.py"] = "";
 
       current = Object.keys(files)[0];
       openFile(current);
@@ -150,7 +146,7 @@ function renderFiles() {
   });
 }
 
-// ================= SEARCH (FIXED + HIGHLIGHT) =================
+// ================= SEARCH =================
 function searchAll(query) {
   const q = query.toLowerCase().trim();
   let found = false;
@@ -160,11 +156,9 @@ function searchAll(query) {
 
     if (q !== "" && name.includes(q)) {
       el.classList.add("highlight");
-      el.style.display = "block";
       found = true;
     } else {
       el.classList.remove("highlight");
-      el.style.display = "block";
     }
   });
 
@@ -221,7 +215,6 @@ function downloadFile() {
   a.click();
 }
 
-// ================= FILE OPERATIONS =================
 function newFile() {
   const name = prompt("File name:");
   if (!name) return;
@@ -236,15 +229,13 @@ function newFolder() {
   const name = prompt("Folder name:");
   if (!name) return;
 
-  const folder = name + "/";
-  files[folder + "readme.txt"] = "// folder created";
+  files[name + "/readme.txt"] = "// folder created";
+  openFile(name + "/readme.txt");
 
-  openFile(folder + "readme.txt");
   saveToDB();
   renderFiles();
 }
 
-// ================= LOGOUT =================
 function logout() {
   localStorage.removeItem("token");
   window.location.href = "auth.html";
