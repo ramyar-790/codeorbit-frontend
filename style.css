@@ -1,0 +1,238 @@
+/* ================= GLOBAL ================= */
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #0d1117;
+  color: #c9d1d9;
+}
+
+/* ================= CENTER PAGE ================= */
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* ================= CARD ================= */
+.card {
+  background: #161b22;
+  padding: 30px;
+  border-radius: 12px;
+  width: 320px;
+  text-align: center;
+  transition: 0.3s;
+  border: 1px solid #30363d;
+}
+
+.hover-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* ================= INPUT ================= */
+input {
+  width: 90%;
+  padding: 10px;
+  margin: 10px;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  color: white;
+  border-radius: 6px;
+  outline: none;
+}
+
+input:focus {
+  border-color: #86d7fa;
+}
+
+/* ================= BUTTON (LIGHT SKY BLUE) ================= */
+button {
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+
+  background: #bae6fd;
+  color: #0d1117;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  transition: 0.25s ease-in-out;
+}
+
+button:hover {
+  background: #7dd3fc;
+  transform: scale(1.05);
+}
+
+/* ================= BUTTON VARIANTS ================= */
+.secondary {
+  background: #e0f2fe;
+}
+
+.secondary:hover {
+  background: #bae6fd;
+}
+
+.danger {
+  background: #fecaca;
+}
+
+.danger:hover {
+  background: #f87171;
+}
+
+/* ================= FADE ================= */
+.fade-in {
+  animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================= LAYOUT ================= */
+.layout {
+  display: flex;
+  height: 100vh;
+}
+
+/* ================= SIDEBAR ================= */
+.sidebar {
+  width: 240px;
+  background: #161b22;
+  padding: 10px;
+  overflow-y: auto;
+  border-right: 1px solid #30363d;
+}
+
+.sidebar input {
+  width: 95%;
+  margin-bottom: 10px;
+}
+
+/* FILE LIST */
+#fileList {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+#fileList div {
+  padding: 6px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+#fileList div:hover {
+  background: #30363d;
+}
+
+#fileList .active {
+  background: #30363d;
+  color: #8cdafc;
+}
+
+/* NO RESULT */
+#noResult {
+  display: none;
+  color: #ff4d4d;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+/* ================= MAIN ================= */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================= TOPBAR ================= */
+.topbar {
+  background: #161b22;
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #30363d;
+}
+
+.topbar .left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* CODEORBIT TITLE */
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: #87d4f5;
+  letter-spacing: 1px;
+}
+
+#filename {
+  font-size: 14px;
+  color: #c9d1d9;
+}
+
+/* RIGHT BUTTONS */
+.topbar .right {
+  display: flex;
+  gap: 8px;
+}
+
+/* ================= EDITOR ================= */
+textarea {
+  flex: 1;
+  background: #0d1117;
+  color: white;
+  border: none;
+  padding: 15px;
+  outline: none;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: none;
+  font-family: "Consolas", monospace;
+}
+
+/* ================= TERMINAL ================= */
+.terminal {
+  height: 150px;
+  background: #010409;
+  padding: 10px;
+  overflow-y: auto;
+  border-top: 1px solid #30363d;
+}
+
+#output {
+  font-size: 13px;
+  white-space: pre-wrap;
+  color: #8bd7f8;
+}
+
+/* ================= SCROLLBAR ================= */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #30363d;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #71d3fd;
+}

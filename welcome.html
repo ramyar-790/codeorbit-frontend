@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <title>CodeOrbit</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body class="center">
+    <div class="card hover-card fade-in">
+      <h1>⚡ CodeOrbit</h1>
+      <p class="tagline">Your Cloud Code Editor</p>
+
+      <button onclick="go()" class="btn">Get Started</button>
+    </div>
+
+    <script>
+      // 👉 ONLY GO TO LOGIN
+      function go() {
+        document.body.style.opacity = "0.5";
+
+        setTimeout(() => {
+          window.location.href = "auth.html";
+        }, 200);
+      }
+
+      // 🚫 ALWAYS RESET SESSION HERE
+      window.onload = () => {
+        localStorage.removeItem("token");
+      };
+    </script>
+  </body>
+</html>
