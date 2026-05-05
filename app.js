@@ -35,23 +35,29 @@ async function loadFromDB() {
   const token = getToken();
   if (!token) return (window.location.href = "auth.html");
 
-  const res = await fetch(`${PROJECT_API}/load`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userId: token }),
-  });
+  try {
+    const res = await fetch(`${PROJECT_API}/load`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // ✅ FIX
+      },
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  files =
-    data.files && Object.keys(data.files).length
-      ? data.files
-      : { "main.py": "print('Hello CodeOrbit 🚀')" };
+    files =
+      data.files && Object.keys(data.files).length
+        ? data.files
+        : { "main.py": "print('Hello CodeOrbit 🚀')" };
 
-  current = Object.keys(files)[0];
+    current = Object.keys(files)[0];
 
-  openFile(current);
-  renderFiles();
+    openFile(current);
+    renderFiles();
+  } catch (err) {
+    output.innerText = "Error loading project";
+  }
 }
 
 // ================= SAVE =================
@@ -59,14 +65,18 @@ async function saveToDB() {
   const token = getToken();
   if (!token) return;
 
-  await fetch(`${PROJECT_API}/save`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      userId: token,
-      files,
-    }),
-  });
+  try {
+    await fetch(`${PROJECT_API}/save`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // ✅ FIX
+      },
+      body: JSON.stringify({ files }),
+    });
+  } catch (err) {
+    console.log("Save failed");
+  }
 }
 
 // ================= AUTO SAVE =================
@@ -103,6 +113,7 @@ function renderFiles() {
       renderFiles();
     };
 
+    // ✏️ RENAME
     const edit = document.createElement("span");
     edit.innerText = " ✏️";
     edit.onclick = (e) => {
@@ -120,6 +131,7 @@ function renderFiles() {
       renderFiles();
     };
 
+    // ❌ DELETE
     const del = document.createElement("span");
     del.innerText = " ❌";
     del.style.color = "red";
@@ -129,8 +141,9 @@ function renderFiles() {
 
       delete files[f];
 
-      const keys = Object.keys(files);
-      if (keys.length === 0) files["main.py"] = "";
+      if (Object.keys(files).length === 0) {
+        files["main.py"] = "";
+      }
 
       current = Object.keys(files)[0];
       openFile(current);
@@ -189,7 +202,7 @@ async function run() {
     });
 
     const data = await res.json();
-    output.innerText = data.output;
+    output.innerText = data.output || "No output";
   } catch (err) {
     output.innerText = "Error: " + err.message;
   }

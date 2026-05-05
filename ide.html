@@ -2,6 +2,11 @@
 <html>
   <head>
     <title>CodeOrbit IDE</title>
+
+    <!-- ✅ IMPORTANT META -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <link rel="stylesheet" href="style.css" />
   </head>
 
@@ -55,22 +60,17 @@
       </div>
     </div>
 
+    <!-- ✅ LOAD SCRIPT AT END -->
     <script src="app.js"></script>
 
-    <!-- ================= AUTH GUARD ================= -->
+    <!-- ✅ OPTIONAL USER LABEL -->
     <script>
-      (function () {
+      document.addEventListener("DOMContentLoaded", () => {
         const token = localStorage.getItem("token");
 
         if (!token || token === "null") {
           window.location.href = "auth.html";
-        }
-      })();
-
-      // 👇 OPTIONAL: show your name/email in sidebar
-      document.addEventListener("DOMContentLoaded", () => {
-        const token = localStorage.getItem("token");
-        if (token) {
+        } else {
           document.getElementById("userLabel").innerText = "My Workspace";
         }
       });

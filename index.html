@@ -2,6 +2,8 @@
 <html>
   <head>
     <title>CodeOrbit</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
   </head>
 
@@ -10,20 +12,20 @@
       <h1>⚡ CodeOrbit</h1>
       <p class="tagline">Your Cloud Code Editor</p>
 
-      <button onclick="go()" class="btn">Get Started</button>
+      <button onclick="go()">Get Started</button>
     </div>
 
     <script>
-      // 👉 ONLY GO TO LOGIN
+      // 👉 Navigate to login page
       function go() {
-        document.body.style.opacity = "0.5";
+        document.body.style.opacity = "0.6";
 
         setTimeout(() => {
           window.location.href = "auth.html";
         }, 200);
       }
 
-      // 🚫 ALWAYS RESET SESSION HERE
+      // 👉 Reset session on homepage
       window.onload = () => {
         localStorage.removeItem("token");
       };
