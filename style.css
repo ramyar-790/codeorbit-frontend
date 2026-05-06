@@ -46,7 +46,7 @@ input:focus {
   border-color: #86d7fa;
 }
 
-/* ================= BUTTON (LIGHT SKY BLUE) ================= */
+/* ================= BUTTON ================= */
 button {
   padding: 10px 20px;
   margin: 5px;
@@ -105,6 +105,7 @@ button:hover {
 .layout {
   display: flex;
   height: 100vh;
+  overflow: hidden;
 }
 
 /* ================= SIDEBAR ================= */
@@ -157,6 +158,7 @@ button:hover {
   flex: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 /* ================= TOPBAR ================= */
@@ -175,7 +177,7 @@ button:hover {
   gap: 12px;
 }
 
-/* CODEORBIT TITLE */
+/* LOGO */
 .logo {
   font-size: 22px;
   font-weight: 700;

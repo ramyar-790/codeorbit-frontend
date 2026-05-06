@@ -3,14 +3,11 @@
   <head>
     <title>CodeOrbit IDE</title>
 
-    <!-- META -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- CSS -->
     <link rel="stylesheet" href="style.css" />
 
-    <!-- SMALL UI FIX -->
     <style>
       .search-box {
         display: flex;
@@ -35,17 +32,14 @@
       <div class="sidebar">
         <h3 id="userLabel">MY FILES</h3>
 
-        <!-- 🔍 SEARCH -->
         <div class="search-box">
           <input id="searchBox" placeholder="Search files..." />
           <button onclick="searchFiles()">Search</button>
         </div>
 
         <div id="noResult">No files found</div>
-
         <div id="fileList"></div>
 
-        <!-- ACTION BUTTONS -->
         <div class="btns">
           <button onclick="newFile()">+ File</button>
           <button onclick="newFolder()">+ Folder</button>
@@ -55,11 +49,10 @@
 
       <!-- ================= MAIN ================= -->
       <div class="main">
-        <!-- TOP BAR -->
         <div class="topbar">
           <div class="left">
             <span class="logo">CodeOrbit</span>
-            <span id="filename">loading...</span>
+            <span id="filename">editor.html</span>
           </div>
 
           <div class="right">
@@ -70,10 +63,8 @@
           </div>
         </div>
 
-        <!-- EDITOR -->
         <textarea id="editor" placeholder="Write your code..."></textarea>
 
-        <!-- OUTPUT -->
         <div class="terminal">
           <pre id="output">Ready...</pre>
         </div>
@@ -83,17 +74,23 @@
     <!-- ================= SCRIPT ================= -->
     <script src="app.js"></script>
 
-    <!-- ================= AUTH CHECK ================= -->
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
+      // 🔐 PROTECT IDE (NO DIRECT ACCESS)
+      window.onload = () => {
         const token = localStorage.getItem("token");
 
         if (!token || token === "null") {
           window.location.href = "auth.html";
         } else {
-          document.getElementById("userLabel").innerText = "My Workspace";
+          document.getElementById("userLabel").innerText = "My Workspace 🚀";
         }
-      });
+      };
+
+      // 🚪 LOGOUT (GO BACK TO LOGIN)
+      function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "auth.html";
+      }
     </script>
   </body>
 </html>

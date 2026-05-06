@@ -21,18 +21,22 @@ const searchBox = document.getElementById("searchBox");
 // ================= TOKEN =================
 const getToken = () => localStorage.getItem("token");
 
-// ================= AUTH GUARD =================
-(function () {
+// ================= AUTH GUARD (SAFE) =================
+window.onload = () => {
   const token = getToken();
+
   if (!token || token === "null") {
     window.location.href = "auth.html";
+  } else {
+    if (document.getElementById("userLabel")) {
+      document.getElementById("userLabel").innerText = "My Workspace 🚀";
+    }
+
+    loadFromDB();
   }
-})();
+};
 
-// ================= INIT =================
-if (editor) loadFromDB();
-
-// ================= LOAD =================
+// ================= LOAD PROJECT =================
 async function loadFromDB() {
   const token = getToken();
 
@@ -50,19 +54,17 @@ async function loadFromDB() {
         ? data.files
         : {
             "main.py": "print('Hello Python 🚀')",
-            "main.c":
-              '#include <stdio.h>\nint main(){ printf("Hello C\\n"); return 0; }',
+            "main.c": '#include <stdio.h>\nint main(){printf("Hello C");}',
             "main.cpp":
-              '#include <iostream>\nusing namespace std;\nint main(){ cout << "Hello C++"; }',
+              '#include <iostream>\nint main(){std::cout<<"Hello C++";}',
             "Main.java":
-              'class Main{ public static void main(String[] args){ System.out.println("Hello Java"); }}',
+              'class Main{public static void main(String[] args){System.out.println("Hello Java");}}',
           };
 
     current = Object.keys(files)[0];
-
     openFile(current);
     renderFiles();
-  } catch {
+  } catch (err) {
     output.innerText = "Error loading project";
   }
 }
@@ -71,14 +73,18 @@ async function loadFromDB() {
 async function saveToDB() {
   const token = getToken();
 
-  await fetch(`${PROJECT_API}/save`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      userId: token,
-      files,
-    }),
-  });
+  try {
+    await fetch(`${PROJECT_API}/save`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: token,
+        files,
+      }),
+    });
+  } catch (err) {
+    console.log("Save error");
+  }
 }
 
 // ================= AUTO SAVE =================
@@ -114,86 +120,32 @@ function renderFiles() {
       renderFiles();
     };
 
-    // ✏️ EDIT
-    const edit = document.createElement("span");
-    edit.innerText = " ✏️";
-    edit.onclick = (e) => {
-      e.stopPropagation();
-
-      const newName = prompt("Rename file:", f);
-      if (!newName || files[newName]) return;
-
-      files[newName] = files[f];
-      delete files[f];
-
-      if (current === f) current = newName;
-
-      saveToDB();
-      renderFiles();
-    };
-
-    // ❌ DELETE
-    const del = document.createElement("span");
-    del.innerText = " ❌";
-    del.style.color = "red";
-
-    del.onclick = (e) => {
-      e.stopPropagation();
-
-      delete files[f];
-
-      if (Object.keys(files).length === 0) {
-        files["main.py"] = "";
-      }
-
-      current = Object.keys(files)[0];
-      openFile(current);
-
-      saveToDB();
-      renderFiles();
-    };
-
-    div.appendChild(edit);
-    div.appendChild(del);
-
     fileList.appendChild(div);
   });
 }
 
-// ================= SEARCH BUTTON =================
+// ================= SEARCH =================
 function searchFiles() {
   const query = searchBox.value.toLowerCase().trim();
   let found = false;
 
   [...fileList.children].forEach((el) => {
-    const name = el.firstChild.textContent.toLowerCase();
+    const name = el.textContent.toLowerCase();
 
-    if (query !== "" && name.includes(query)) {
-      el.style.background = "#1f6feb"; // highlight blue
+    if (query && name.includes(query)) {
+      el.style.background = "#1f6feb";
       found = true;
     } else {
       el.style.background = "";
     }
   });
 
-  noResult.style.display = found || query === "" ? "none" : "block";
-
-  highlightCode(query);
+  if (noResult) {
+    noResult.style.display = found || query === "" ? "none" : "block";
+  }
 }
 
-// ================= CODE HIGHLIGHT =================
-function highlightCode(query) {
-  if (!query) return;
-
-  const text = editor.value;
-  const regex = new RegExp(query, "gi");
-
-  const highlighted = text.replace(regex, (match) => `>>${match}<<`);
-
-  output.innerText = "Search Highlight:\n\n" + highlighted;
-}
-
-// ================= RUN =================
+// ================= RUN CODE =================
 async function run() {
   output.innerText = "Running...\n";
 
@@ -250,19 +202,11 @@ function newFile() {
   renderFiles();
 }
 
-function newFolder() {
-  const name = prompt("Folder name:");
-  if (!name) return;
-
-  files[name + "/readme.txt"] = "// folder created";
-  openFile(name + "/readme.txt");
-
-  saveToDB();
-  renderFiles();
-}
-
+// ================= LOGOUT (FIXED FLOW) =================
 function logout() {
   localStorage.removeItem("token");
+
+  // ALWAYS GO BACK TO LOGIN (not editor)
   window.location.href = "auth.html";
 }
 

@@ -1,14 +1,12 @@
 <!doctype html>
 <html>
   <head>
-    <title>CodeOrbit</title>
+    <title>CodeOrbit - Welcome</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- CSS -->
     <link rel="stylesheet" href="style.css" />
 
-    <!-- Small UI improvement -->
     <style>
       .tagline {
         font-size: 14px;
@@ -37,14 +35,17 @@
   <body class="center">
     <div class="card hover-card fade-in">
       <h1>⚡ CodeOrbit</h1>
-      <p class="tagline">Your Cloud Code Editor</p>
+      <p class="tagline">WELCOME TO YOUR CLOUD CODE EDITOR 🚀</p>
 
-      <button onclick="go()">Get Started</button>
+      <button onclick="goLogin()">Get Started</button>
     </div>
 
     <script>
-      // 🚀 GO TO LOGIN
-      function go() {
+      // 🔥 ALWAYS START HERE (CLEAR OLD SESSION)
+      localStorage.removeItem("token");
+
+      // 🚀 GO TO LOGIN PAGE
+      function goLogin() {
         document.body.style.opacity = "0.6";
 
         setTimeout(() => {
@@ -52,16 +53,12 @@
         }, 200);
       }
 
-      // 🔐 CHECK LOGIN (AUTO REDIRECT)
+      // 🔐 SAFETY CHECK (if already logged in → go editor)
       window.onload = () => {
         const token = localStorage.getItem("token");
 
         if (token && token !== "null") {
-          // already logged in → go to IDE
           window.location.href = "ide.html";
-        } else {
-          // not logged → clear session
-          localStorage.removeItem("token");
         }
       };
     </script>
