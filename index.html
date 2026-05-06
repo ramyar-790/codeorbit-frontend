@@ -4,7 +4,34 @@
     <title>CodeOrbit</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css" />
+
+    <!-- Small UI improvement -->
+    <style>
+      .tagline {
+        font-size: 14px;
+        color: #8b949e;
+        margin-bottom: 20px;
+      }
+
+      button {
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        border: none;
+        background: #7dd3fc;
+        color: #0d1117;
+        font-weight: 600;
+        transition: 0.2s;
+      }
+
+      button:hover {
+        background: #38bdf8;
+        transform: scale(1.05);
+      }
+    </style>
   </head>
 
   <body class="center">
@@ -16,7 +43,7 @@
     </div>
 
     <script>
-      // 👉 Navigate to login page
+      // 🚀 GO TO LOGIN
       function go() {
         document.body.style.opacity = "0.6";
 
@@ -25,9 +52,17 @@
         }, 200);
       }
 
-      // 👉 Reset session on homepage
+      // 🔐 CHECK LOGIN (AUTO REDIRECT)
       window.onload = () => {
-        localStorage.removeItem("token");
+        const token = localStorage.getItem("token");
+
+        if (token && token !== "null") {
+          // already logged in → go to IDE
+          window.location.href = "ide.html";
+        } else {
+          // not logged → clear session
+          localStorage.removeItem("token");
+        }
       };
     </script>
   </body>

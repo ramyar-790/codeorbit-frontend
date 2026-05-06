@@ -21,7 +21,8 @@
     </div>
 
     <script>
-      const BASE_URL = "https://codeorbit-backend-1.onrender.com";
+      // ✅ UPDATED BACKEND URL
+      const BASE_URL = "https://codeorbit-backend-kxo0.onrender.com";
       const API = `${BASE_URL}/api/auth`;
 
       // 🔐 LOGIN
@@ -41,11 +42,14 @@
 
           if (data.token) {
             localStorage.setItem("token", data.token);
-            window.location.href = "ide.html";
+
+            setTimeout(() => {
+              window.location.href = "ide.html";
+            }, 200);
           }
         } catch (err) {
           document.getElementById("msg").innerText =
-            "Error connecting to server";
+            "❌ Server error. Try again.";
         }
       }
 
@@ -65,13 +69,14 @@
           document.getElementById("msg").innerText = data.message;
         } catch (err) {
           document.getElementById("msg").innerText =
-            "Error connecting to server";
+            "❌ Server error. Try again.";
         }
       }
 
       // 🔁 AUTO LOGIN
       window.onload = () => {
         const token = localStorage.getItem("token");
+
         if (token && token !== "null") {
           window.location.href = "ide.html";
         }

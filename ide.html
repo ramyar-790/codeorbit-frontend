@@ -3,11 +3,30 @@
   <head>
     <title>CodeOrbit IDE</title>
 
-    <!-- ✅ IMPORTANT META -->
+    <!-- META -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css" />
+
+    <!-- SMALL UI FIX -->
+    <style>
+      .search-box {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 10px;
+      }
+
+      .search-box input {
+        flex: 1;
+      }
+
+      .search-box button {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+    </style>
   </head>
 
   <body>
@@ -16,16 +35,17 @@
       <div class="sidebar">
         <h3 id="userLabel">MY FILES</h3>
 
-        <input
-          id="searchBox"
-          placeholder="Search files..."
-          oninput="searchAll(this.value)"
-        />
+        <!-- 🔍 SEARCH -->
+        <div class="search-box">
+          <input id="searchBox" placeholder="Search files..." />
+          <button onclick="searchFiles()">Search</button>
+        </div>
 
         <div id="noResult">No files found</div>
 
         <div id="fileList"></div>
 
+        <!-- ACTION BUTTONS -->
         <div class="btns">
           <button onclick="newFile()">+ File</button>
           <button onclick="newFolder()">+ Folder</button>
@@ -60,10 +80,10 @@
       </div>
     </div>
 
-    <!-- ✅ LOAD SCRIPT AT END -->
+    <!-- ================= SCRIPT ================= -->
     <script src="app.js"></script>
 
-    <!-- ✅ OPTIONAL USER LABEL -->
+    <!-- ================= AUTH CHECK ================= -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const token = localStorage.getItem("token");

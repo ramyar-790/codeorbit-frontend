@@ -1,4 +1,5 @@
-const BASE_URL = "https://codeorbit-backend-1.onrender.com";
+// ================= BASE URL =================
+const BASE_URL = "https://codeorbit-backend-kxo0.onrender.com";
 
 const API = `${BASE_URL}/api/auth`;
 const PROJECT_API = `${BASE_URL}/api/project`;
@@ -15,6 +16,7 @@ const fileList = document.getElementById("fileList");
 const filename = document.getElementById("filename");
 const output = document.getElementById("output");
 const noResult = document.getElementById("noResult");
+const searchBox = document.getElementById("searchBox");
 
 // ================= TOKEN =================
 const getToken = () => localStorage.getItem("token");
@@ -30,18 +32,15 @@ const getToken = () => localStorage.getItem("token");
 // ================= INIT =================
 if (editor) loadFromDB();
 
-// ================= LOAD PROJECT =================
+// ================= LOAD =================
 async function loadFromDB() {
   const token = getToken();
-  if (!token) return (window.location.href = "auth.html");
 
   try {
     const res = await fetch(`${PROJECT_API}/load`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // ✅ FIX
-      },
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: token }),
     });
 
     const data = await res.json();
@@ -49,13 +48,21 @@ async function loadFromDB() {
     files =
       data.files && Object.keys(data.files).length
         ? data.files
-        : { "main.py": "print('Hello CodeOrbit 🚀')" };
+        : {
+            "main.py": "print('Hello Python 🚀')",
+            "main.c":
+              '#include <stdio.h>\nint main(){ printf("Hello C\\n"); return 0; }',
+            "main.cpp":
+              '#include <iostream>\nusing namespace std;\nint main(){ cout << "Hello C++"; }',
+            "Main.java":
+              'class Main{ public static void main(String[] args){ System.out.println("Hello Java"); }}',
+          };
 
     current = Object.keys(files)[0];
 
     openFile(current);
     renderFiles();
-  } catch (err) {
+  } catch {
     output.innerText = "Error loading project";
   }
 }
@@ -63,20 +70,15 @@ async function loadFromDB() {
 // ================= SAVE =================
 async function saveToDB() {
   const token = getToken();
-  if (!token) return;
 
-  try {
-    await fetch(`${PROJECT_API}/save`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // ✅ FIX
-      },
-      body: JSON.stringify({ files }),
-    });
-  } catch (err) {
-    console.log("Save failed");
-  }
+  await fetch(`${PROJECT_API}/save`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userId: token,
+      files,
+    }),
+  });
 }
 
 // ================= AUTO SAVE =================
@@ -84,7 +86,6 @@ function autoSave() {
   clearTimeout(saveTimeout);
 
   saveTimeout = setTimeout(() => {
-    if (!current) return;
     files[current] = editor.value;
     saveToDB();
   }, 800);
@@ -113,7 +114,7 @@ function renderFiles() {
       renderFiles();
     };
 
-    // ✏️ RENAME
+    // ✏️ EDIT
     const edit = document.createElement("span");
     edit.innerText = " ✏️";
     edit.onclick = (e) => {
@@ -159,35 +160,46 @@ function renderFiles() {
   });
 }
 
-// ================= SEARCH =================
-function searchAll(query) {
-  const q = query.toLowerCase().trim();
+// ================= SEARCH BUTTON =================
+function searchFiles() {
+  const query = searchBox.value.toLowerCase().trim();
   let found = false;
 
   [...fileList.children].forEach((el) => {
     const name = el.firstChild.textContent.toLowerCase();
 
-    if (q !== "" && name.includes(q)) {
-      el.classList.add("highlight");
+    if (query !== "" && name.includes(query)) {
+      el.style.background = "#1f6feb"; // highlight blue
       found = true;
     } else {
-      el.classList.remove("highlight");
+      el.style.background = "";
     }
   });
 
-  if (noResult) {
-    noResult.style.display = found || q === "" ? "none" : "block";
-  }
+  noResult.style.display = found || query === "" ? "none" : "block";
+
+  highlightCode(query);
 }
 
-// ================= RUN CODE =================
+// ================= CODE HIGHLIGHT =================
+function highlightCode(query) {
+  if (!query) return;
+
+  const text = editor.value;
+  const regex = new RegExp(query, "gi");
+
+  const highlighted = text.replace(regex, (match) => `>>${match}<<`);
+
+  output.innerText = "Search Highlight:\n\n" + highlighted;
+}
+
+// ================= RUN =================
 async function run() {
   output.innerText = "Running...\n";
 
-  let lang = "js";
+  let lang = "python";
 
-  if (current.endsWith(".py")) lang = "python";
-  else if (current.endsWith(".c")) lang = "c";
+  if (current.endsWith(".c")) lang = "c";
   else if (current.endsWith(".cpp")) lang = "cpp";
   else if (current.endsWith(".java")) lang = "java";
 
@@ -224,7 +236,7 @@ function downloadFile() {
 
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = current || "code.txt";
+  a.download = current;
   a.click();
 }
 
